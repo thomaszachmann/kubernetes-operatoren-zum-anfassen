@@ -1,0 +1,11 @@
+apiVersion: web.lab.example/v1alpha1
+kind: StaticSite
+metadata:
+  name: kaputt
+spec:
+  content: "<h1>Hallo</h1>"
+  contentFrom:
+    configMapRef:
+      name: html
+  replicas: 11
+  image: nginx:latest

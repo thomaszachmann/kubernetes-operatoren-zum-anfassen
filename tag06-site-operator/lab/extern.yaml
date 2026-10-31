@@ -1,0 +1,8 @@
+apiVersion: web.lab.example/v1alpha1
+kind: StaticSite
+metadata:
+  name: extern
+spec:
+  contentFrom:
+    configMapRef:
+      name: extern-html

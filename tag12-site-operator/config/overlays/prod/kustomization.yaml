@@ -1,0 +1,20 @@
+resources:
+- ../../default
+images:
+- name: controller
+  newName: registry.lab.example/site-operator
+  newTag: 0.1.0
+patches:
+- target:
+    kind: Deployment
+    name: controller-manager
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 2
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --zap-encoder=json
+    - op: replace
+      path: /spec/template/spec/containers/0/resources/limits/memory
+      value: 256Mi

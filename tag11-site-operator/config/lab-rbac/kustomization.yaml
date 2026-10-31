@@ -1,0 +1,6 @@
+# Nur fürs Lab: RBAC aus config/rbac mit denselben Namen wie config/default
+namespace: site-operator-system
+namePrefix: site-operator-
+resources:
+- namespace.yaml
+- ../rbac

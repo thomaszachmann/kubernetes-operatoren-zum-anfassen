@@ -1,0 +1,6 @@
+defaultBaseImage: gcr.io/distroless/static:nonroot
+builds:
+  - id: manager
+    main: ./cmd
+    ldflags:
+      - -s -w

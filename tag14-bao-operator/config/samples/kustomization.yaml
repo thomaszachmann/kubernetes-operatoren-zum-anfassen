@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- bao_v1alpha1_baopolicy.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

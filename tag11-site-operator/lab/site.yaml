@@ -1,0 +1,6 @@
+apiVersion: web.lab.example/v1
+kind: StaticSite
+metadata:
+  name: demo
+spec:
+  content: "<h1>Hallo vom site-operator</h1>"

@@ -1,0 +1,8 @@
+apiVersion: web.lab.example/v1
+kind: StaticSite
+metadata:
+  name: ref
+spec:
+  source:
+    configMapRef:
+      name: html

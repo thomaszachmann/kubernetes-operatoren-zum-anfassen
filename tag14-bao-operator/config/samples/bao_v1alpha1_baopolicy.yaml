@@ -1,0 +1,11 @@
+apiVersion: bao.lab.example/v1alpha1
+kind: BaoPolicy
+metadata:
+  name: webshop-read
+  namespace: shop
+spec:
+  rules:
+    - path: secret/data/webshop/*
+      capabilities: [read, list]
+    - path: secret/data/webshop/admin
+      capabilities: [deny]

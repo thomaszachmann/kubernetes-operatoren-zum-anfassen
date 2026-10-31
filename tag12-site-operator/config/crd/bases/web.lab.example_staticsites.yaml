@@ -1,0 +1,351 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.22.0
+  name: staticsites.web.lab.example
+spec:
+  group: web.lab.example
+  names:
+    kind: StaticSite
+    listKind: StaticSiteList
+    plural: staticsites
+    shortNames:
+    - site
+    singular: staticsite
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.readyReplicas
+      name: Ready
+      type: integer
+    - jsonPath: .status.conditions[?(@.type=="Available")].status
+      name: Available
+      type: string
+    - jsonPath: .status.url
+      name: URL
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: StaticSite liefert eine statische Webseite mit nginx aus.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: StaticSiteSpec ist der Wunschzustand einer StaticSite.
+            properties:
+              content:
+                description: content ist der HTML-Inhalt der Seite (alternativ zu
+                  source).
+                maxLength: 65536
+                type: string
+              image:
+                default: nginxinc/nginx-unprivileged:1.31-alpine
+                description: image ist das Webserver-Image.
+                type: string
+                x-kubernetes-validations:
+                - rule: '!self.endsWith('':latest'')'
+              path:
+                default: /
+                description: path ist der URL-Pfad, unter dem die Seite ausgeliefert
+                  wird.
+                type: string
+                x-kubernetes-validations:
+                - rule: self == oldSelf
+              replicas:
+                default: 1
+                description: replicas ist die Anzahl der nginx-Pods.
+                format: int32
+                maximum: 10
+                minimum: 1
+                type: integer
+              source:
+                description: source verweist auf eine vorhandene ConfigMap (alternativ
+                  zu content).
+                properties:
+                  configMapRef:
+                    description: configMapRef liest den Inhalt aus dem Key index.html
+                      einer ConfigMap.
+                    properties:
+                      name:
+                        description: name der ConfigMap.
+                        minLength: 1
+                        type: string
+                    required:
+                    - name
+                    type: object
+                type: object
+            type: object
+            x-kubernetes-validations:
+            - message: exactly one of the fields in [content source] must be set
+              rule: (has(self.content)?1:0)+(has(self.source)?1:0) == 1
+          status:
+            description: StaticSiteStatus ist der beobachtete Zustand einer StaticSite.
+            properties:
+              conditions:
+                description: 'conditions: Available, Progressing, Degraded.'
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: observedGeneration ist die zuletzt verarbeitete metadata.generation.
+                format: int64
+                type: integer
+              readyReplicas:
+                description: readyReplicas ist die Zahl der bereiten Pods des Deployments.
+                format: int32
+                type: integer
+              url:
+                description: url ist die clusterinterne Adresse, z. B. http://demo.default.svc.
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .status.readyReplicas
+      name: Ready
+      type: integer
+    - jsonPath: .status.conditions[?(@.type=="Available")].status
+      name: Available
+      type: string
+    - jsonPath: .status.url
+      name: URL
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    deprecated: true
+    deprecationWarning: v1alpha1 ist veraltet, nutze v1
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: StaticSite liefert eine statische Webseite mit nginx aus.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: StaticSiteSpec ist der Wunschzustand einer StaticSite.
+            properties:
+              content:
+                description: content ist der HTML-Inhalt der Seite (alternativ zu
+                  contentFrom).
+                maxLength: 65536
+                type: string
+              contentFrom:
+                description: contentFrom verweist auf eine vorhandene ConfigMap (alternativ
+                  zu content).
+                properties:
+                  configMapRef:
+                    description: configMapRef liest den Inhalt aus dem Key index.html
+                      einer ConfigMap.
+                    properties:
+                      name:
+                        description: name der ConfigMap.
+                        minLength: 1
+                        type: string
+                    required:
+                    - name
+                    type: object
+                type: object
+              image:
+                default: nginxinc/nginx-unprivileged:1.31-alpine
+                description: image ist das Webserver-Image.
+                type: string
+                x-kubernetes-validations:
+                - rule: '!self.endsWith('':latest'')'
+              path:
+                default: /
+                description: path ist der URL-Pfad, unter dem die Seite ausgeliefert
+                  wird.
+                type: string
+                x-kubernetes-validations:
+                - rule: self == oldSelf
+              replicas:
+                default: 1
+                description: replicas ist die Anzahl der nginx-Pods.
+                format: int32
+                maximum: 10
+                minimum: 1
+                type: integer
+            type: object
+            x-kubernetes-validations:
+            - message: exactly one of the fields in [content contentFrom] must be
+                set
+              rule: (has(self.content)?1:0)+(has(self.contentFrom)?1:0) == 1
+          status:
+            description: StaticSiteStatus ist der beobachtete Zustand einer StaticSite.
+            properties:
+              conditions:
+                description: 'conditions: Available, Progressing, Degraded.'
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: observedGeneration ist die zuletzt verarbeitete metadata.generation.
+                format: int64
+                type: integer
+              readyReplicas:
+                description: readyReplicas ist die Zahl der bereiten Pods des Deployments.
+                format: int32
+                type: integer
+              url:
+                description: url ist die clusterinterne Adresse, z. B. http://demo.default.svc.
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}

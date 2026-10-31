@@ -1,0 +1,11 @@
+apiVersion: web.lab.example/v1alpha1
+kind: StaticSite
+metadata:
+  labels:
+    app.kubernetes.io/name: site-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: staticsite-sample
+spec:
+  content: |
+    <h1>Hallo vom site-operator</h1>
+  replicas: 2

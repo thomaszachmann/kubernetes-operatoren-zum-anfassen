@@ -1,0 +1,9 @@
+apiVersion: web.lab.example/v1
+kind: StaticSite
+metadata:
+  labels:
+    app.kubernetes.io/name: site-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: staticsite-sample
+spec:
+  # TODO(user): Add fields here

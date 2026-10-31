@@ -1,0 +1,1 @@
+		Recorder: mgr.GetEventRecorder("site-operator"),
