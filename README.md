@@ -1,38 +1,38 @@
-# Kubernetes-Operatoren zum Anfassen – Begleitcode
+# Kubernetes operators hands-on – Companion Code
 
-Begleitcode zum Buch **Kubernetes-Operatoren zum Anfassen** – Eigene Controller und CRDs in Go. Teil der Reihe IT-Trainingslager von Thomas Zachmann.
+Companion code for the book **Kubernetes operators hands-on** (German edition: *Kubernetes-Operatoren zum Anfassen*) – custom controllers and CRDs in Go. Part of Thomas Zachmann's IT Drills series.
 
-Buchseite: https://it-trainingslager.de/buecher/kubernetes-operatoren
+Book page: https://itdrills.com/books/kubernetes-operatoren · German edition: https://it-trainingslager.de/buecher/kubernetes-operatoren
 
-Der Code begleitet das Buch; Erklärungen und Übungen stehen im Buch.
+The code accompanies the book; explanations and exercises are in the book.
 
-## Inhalt
+## Contents
 
 - `registrar/`
-- `tag01-labelsync/` – Tag 1
-- `tag02-restarter/` – Tag 2
-- `tag03-site-operator/` – Tag 3
-- `tag04-site-operator/` – Tag 4
-- `tag05-site-operator/` – Tag 5
-- `tag06-site-operator/` – Tag 6
-- `tag07-site-operator/` – Tag 7
-- `tag08-site-operator/` – Tag 8
-- `tag09-site-operator/` – Tag 9
-- `tag10-site-operator/` – Tag 10
-- `tag11-site-operator/` – Tag 11
-- `tag12-site-operator/` – Tag 12
-- `tag13-site-operator/` – Tag 13
-- `tag14-bao-operator/` – Tag 14
+- `tag01-labelsync/` – Day 1
+- `tag02-restarter/` – Day 2
+- `tag03-site-operator/` – Day 3
+- `tag04-site-operator/` – Day 4
+- `tag05-site-operator/` – Day 5
+- `tag06-site-operator/` – Day 6
+- `tag07-site-operator/` – Day 7
+- `tag08-site-operator/` – Day 8
+- `tag09-site-operator/` – Day 9
+- `tag10-site-operator/` – Day 10
+- `tag11-site-operator/` – Day 11
+- `tag12-site-operator/` – Day 12
+- `tag13-site-operator/` – Day 13
+- `tag14-bao-operator/` – Day 14
 - `tools/`
 
-## Schnellstart
+## Quick start
 
 ```bash
 git clone https://github.com/thomaszachmann/kubernetes-operatoren-zum-anfassen.git
 ```
 
-Gearbeitet wird im Buch unter `~/op-lab` (siehe Kapitel „Tag 0“); dieses Repo enthält die fertigen Stände aller Tage zum Vergleich.
+In the book you work under `~/op-lab` (see the "Day 0" chapter); this repo contains the finished state of every day for comparison.
 
-## Lizenz
+## License
 
-Code: MIT (siehe LICENSE). Buchtexte, Abbildungen und Cover sind nicht Teil dieses Repos und nicht lizenziert.
+Code: MIT (see LICENSE). Book text, figures and cover are not part of this repo and are not licensed.
